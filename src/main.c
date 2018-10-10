@@ -22,7 +22,8 @@ int main(int argc, char* argv[]){
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-
+#include <unistd.h>
+#include <signal.h>
 
 //void  parse(char *line, char **argv)
 //{
@@ -64,6 +65,7 @@ int main()
 	char line[1024];
 	scanf ("%[^\n]%*c", line);
 	parseCommand(line);
+	exitProcess(1);
 
 //     char  line[1024];             /* the input line                 */
 //     char  *argv[64];              /* the command line argument      */

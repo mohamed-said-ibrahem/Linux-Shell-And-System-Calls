@@ -1,6 +1,9 @@
 #include "../helper/methods.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
 
 char commandsArr[1000][25];
 int commandsCounter = 0;
@@ -17,16 +20,16 @@ int checkBackgroundExecution(char *command){
 
 char *removeWhiteSpaces(char *command){
 	   int length, indexA, indexB ,indexC;
-	   char *start;
+	   char *modifiedCommand;
 	   indexA = 0;
 	   indexB = 0;
 	   indexC = 0;
 
 	   length = strlen(command);
 
-	   start = (char*) malloc (length+1);
+	   modifiedCommand = (char*) malloc (length+1);
 
-	   if (start == NULL)
+	   if (modifiedCommand == NULL)
 	      exit(1);
 
 	   while (*(command+indexA) != '\0') {
@@ -41,17 +44,17 @@ char *removeWhiteSpaces(char *command){
 	            }
 	         }
 	      }
-	      *(start+indexB) = *(command+indexA);
+	      *(modifiedCommand+indexB) = *(command+indexA);
 	      indexA++; indexB++;
 	   }
-	   *(start+indexB)= '\0';
-	   if(*(start+indexC)== ' '){
-		   while (*(start+indexC) != '\0') {
-			   *(start+indexC) = *(start+indexC+1);
+	   *(modifiedCommand+indexB)= '\0';
+	   if(*(modifiedCommand+indexC)== ' '){
+		   while (*(modifiedCommand+indexC) != '\0') {
+			   *(modifiedCommand+indexC) = *(modifiedCommand+indexC+1);
 			   indexC++;
 		   }
 	   }
-	   return start;
+	   return modifiedCommand;
 
 };
 
@@ -69,17 +72,19 @@ void parseCommand(char *command){
 	  commandsCounter++;
 
 	  token = strtok(NULL, " ");
-
 	}
 
 
 };
 
-//void exit(bool waiting, char* const args[],char* command){
-//
-//
-//};
+// the status value returned to the parent process.
+void exitProcess(int status){
+	printf("Thank you for using my terminal the terminal exit with status code: %d",status);
+	exit(status);
+};
+
 void startShell(){
+
 
 };
 

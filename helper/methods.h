@@ -3,8 +3,7 @@
 #ifndef HELPER_METHODS_H_
 #define HELPER_METHODS_H_
 
-
-void exit();
+void exitProcess(int status);
 void startShell();
 int reutrnStatusCode(char* const args[]);
 void printErrorMessages(int status[]);
@@ -15,6 +14,5 @@ void childHandler(int sig);
 void parseCommand(char *command);
 char *removeWhiteSpaces(char *command);
 int checkBackgroundExecution(char *command);
-
 
 #endif /* HELPER_METHODS_H_ */
