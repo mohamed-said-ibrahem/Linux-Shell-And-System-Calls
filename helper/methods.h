@@ -17,5 +17,6 @@ void parseCommand(char *command);
 char *removeWhiteSpaces(char *command);
 int checkBackgroundExecution(char *command);
 void parseCommandInsideAsingleArray(char *line, char **argv);
+int cdCommand(char *pth);
 
 #endif /* HELPER_METHODS_H_ */

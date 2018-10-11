@@ -13,7 +13,7 @@ int backgroundExecution;
 
 int checkBackgroundExecution(char *command){
 	int len = strlen(command);
-	if(command[len-1] == '&'||command[len-2]){
+	if(command[len-1] == '&'||command[len-2] == '&'){
 		return 1;
 	}else{
 		return 0;
@@ -113,7 +113,31 @@ void printErrorMessages(int status[]){
 
 };
 
+
+int cdCommand(char *pth){
+    char cwd[400];
+    char path[400];
+    strcpy(path,pth);
+
+    if(pth[0] != '/')
+    {
+        getcwd(cwd,sizeof(cwd));
+        strcat(cwd,"/");
+        strcat(cwd,path);
+        chdir(cwd);
+    }else{
+        chdir(pth);
+    }
+	printf("%s",getcwd(cwd,sizeof(cwd)));
+
+    return 0;
+}
+
 void executeShellBuiltInCommands(char *command,char *args[]){
+	if(strcmp(command,"cd") == 0){
+		cdCommand(commandsArr[1]);
+	}
+//	if()
 
 
 };
@@ -122,6 +146,9 @@ void executeShellBuiltInCommands(char *command,char *args[]){
 void execute(char **args){
 	if(strcmp(commandsArr[0],"exit") == 0){
 		exitProcess(0);
+	}
+	if(backgroundExecution){
+		printf("& ya abn al 3neta");
 	}
 	pid_t pid;
 	int status;

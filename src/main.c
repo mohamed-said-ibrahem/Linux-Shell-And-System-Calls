@@ -67,6 +67,7 @@ int main()
 	char *commandLineArgs[1024]={};
 	printf("SHELL->");
 	scanf ("%[^\n]%*c", line);
+	checkBackgroundExecution(line);
 	parseCommand(line);
 	parseCommandInsideAsingleArray(line,commandLineArgs);
 	execute(commandLineArgs);
