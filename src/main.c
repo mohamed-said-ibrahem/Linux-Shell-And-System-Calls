@@ -61,23 +61,41 @@ int main(int argc, char* argv[]){
 
 int main()
 {
-
 	char line[1024];
+	char *commandLineArgs[1024];
 	scanf ("%[^\n]%*c", line);
 	parseCommand(line);
-	exitProcess(1);
+	execute(commandLineArgs);
+//	parseCommand(line);
+//	parseCommandInsideAsingleArray(line,commandLineArgs);
+//
+
+
+//	exitProcess(1);
+//	startShell();
+
+
 
 //     char  line[1024];             /* the input line                 */
 //     char  *argv[64];              /* the command line argument      */
 
 //
-	//     char *cmd = "ls";
-	//     char *argv[3];
-	//     argv[0] = "ls";
-	//     argv[0] = "-la";
-	//     argv[2] = NULL;
+//	     char *cmd = "cp";
+//	     char *argv[3];
+//	     argv[0] = "cp";
+//	     argv[1] = "/home/said/Desktop/r/Resume.pdf";
+//	     argv[2] = "/home/said/Desktop/s";
+//	     argv[3] = NULL;
+
 	//
-	//     execvp(cmd,argv); //This will run "ls -la" as if it were a c
+//	command = cp
+//
+//	args[0] = cp
+//
+//	args[1] = /home/john/r1.sav
+//
+//	args[2] = /home/john/anotherfolder
+//	     execvp(cmd,argv); //This will run "ls -la" as if it were a c
 
 
 

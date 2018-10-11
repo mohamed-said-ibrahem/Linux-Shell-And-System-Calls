@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/types.h> /* pid_t */
+#include <errno.h>   /* errno */
 
 char commandsArr[1000][25];
 int commandsCounter = 0;
@@ -58,6 +60,17 @@ char *removeWhiteSpaces(char *command){
 
 };
 
+void parseCommandInsideAsingleArray(char *command,char **arr){
+	     while (*command != '\0') {
+	          while (*command == ' ' || *command == '\t' || *command == '\n')
+	               *command++ = '\0';
+	          *arr++ = command;
+	          while (*command != '\0' && *command != ' ' &&
+	                 *command != '\t' && *command != '\n')
+	        	  command++;
+	     }*arr = '\0';
+}
+
 void parseCommand(char *command){
 
 	char *token;
@@ -69,17 +82,18 @@ void parseCommand(char *command){
 	while( token != NULL ) {
 
 	  strcpy(commandsArr[commandsCounter],token);
+
 	  commandsCounter++;
 
 	  token = strtok(NULL, " ");
 	}
 
-
 };
+
 
 // the status value returned to the parent process.
 void exitProcess(int status){
-	printf("Thank you for using my terminal the terminal exit with status code: %d",status);
+	printf("Thank you for using my terminal the terminal exit with status code: %d\n",status);
 	exit(status);
 };
 
@@ -96,7 +110,20 @@ void printErrorMessages(int status[]){
 
 
 };
-void execute(bool waiting, char* const args[], const char* command){
+void execute(char **args){
+	if(strcmp(commandsArr[0],"exit") == 0){
+		exitProcess(0);
+	}
+	pid_t pid;
+	pid = fork();
+	if(pid < 0){
+	      printf("ERROR CAN'T FORK() \n");
+	      exitProcess(errno);
+	}else if(pid==0){
+
+	}else{
+
+	}
 
 
 };
