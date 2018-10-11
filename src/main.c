@@ -62,17 +62,20 @@ int main(int argc, char* argv[]){
 int main()
 {
 
+	system("bash -c history");
 
 	while(1){
 	char line[1024]={};
 	char *commandLineArgs[1024]={};
-	printf("SHELL->");
+	printf("SHELL--->\n");
 	scanf ("%[^\n]%*c", line);
-	checkBackgroundExecution(line);
-	parseCommand(line);
-	parseCommandInsideAsingleArray(line,commandLineArgs);
+	char *newLine = trimWhiteSpaces(line);
+	checkBackgroundExecution(newLine);
+	parseCommand(newLine);
+	parseCommandInsideAsingleArray(newLine,commandLineArgs);
+	//writeInLogFille(line);
 	execute(commandLineArgs);
-    printf("\n");
+    printf("\n\n");
 
 	}
 

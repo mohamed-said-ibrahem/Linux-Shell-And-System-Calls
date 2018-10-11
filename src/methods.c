@@ -6,10 +6,13 @@
 #include <signal.h>
 #include <sys/types.h> /* pid_t */
 #include <errno.h>   /* errno */
+#include <sys/types.h>
+#include <sys/wait.h>
 
 char commandsArr[1000][25];
 int commandsCounter = 0;
 int backgroundExecution;
+int valid;
 
 int checkBackgroundExecution(char *command){
 	int len = strlen(command);
@@ -60,6 +63,22 @@ char *removeWhiteSpaces(char *command){
 
 };
 
+char *trimWhiteSpaces(char *str)
+{
+  char *end;
+
+  while(isspace((unsigned char)*str)) str++;
+
+  if(*str == 0)return str;
+
+  end = str + strlen(str) - 1;
+  while(end > str && isspace((unsigned char)*end)) end--;
+
+  end[1] = '\0';
+
+  return str;
+}
+
 void parseCommandInsideAsingleArray(char *command,char **arr){
 	     while (*command != '\0') {
 	          while (*command == ' ' || *command == '\t' || *command == '\n')
@@ -69,7 +88,10 @@ void parseCommandInsideAsingleArray(char *command,char **arr){
 	                 *command != '\t' && *command != '\n')
 	        	  command++;
 	     }*arr = '\0';
+	 	printf(*arr);
+
 }
+
 
 void parseCommand(char *command){
 
@@ -94,7 +116,6 @@ void parseCommand(char *command){
 
 // the status value returned to the parent process.
 void exitProcess(int status){
-	printf("Thank you for using my terminal the terminal exit with status code: %d\n",status);
 	exit(status);
 };
 
@@ -137,7 +158,8 @@ void executeShellBuiltInCommands(char *command,char *args[]){
 	if(strcmp(command,"cd") == 0){
 		cdCommand(commandsArr[1]);
 	}else{
-		//example-> "times","dirs","history",
+		//example-> "times","dirs","help","eval",....
+		// list of all Built-In mehods  https://docstore.mik.ua/orelly/linux/lnut/ch07_07.htm
 		char *head = "bash -c ";
 	    char *result = malloc(strlen(head) + strlen(command) + 1); // +1 for the null-terminator
 	    strcpy(result, head);
@@ -145,7 +167,7 @@ void executeShellBuiltInCommands(char *command,char *args[]){
 
 	    printf("command is:\n");
 	    printf("%s",result);
-	    printf("\n");
+	    printf("\n\n");
 		system(result);
 //		system(command);
 
@@ -159,46 +181,92 @@ void executeShellBuiltInCommands(char *command,char *args[]){
 };
 
 
+
+void signalHandler(int signal)
+{
+	printf("\n\nCought signal %d!\n\n",signal);
+	if (signal==SIGCHLD) {
+		printf("\n\nChild ended\n\n");
+		writeInLogFille("child process was terminated");
+
+	}
+}
+
+
 void execute(char **args){
+	signal(SIGCHLD,signalHandler);
+	pid_t pid;
 	if(strcmp(commandsArr[0],"exit") == 0){
 		exitProcess(0);
 	}
-	if(backgroundExecution){
-		printf("& ya abn al 3neta");
-	}
-	pid_t pid;
-	int status;
+
 	pid = fork();
+
 	if(pid < 0){
 	      printf("ERROR CAN'T FORK() \n");
 	      exitProcess(errno);
-	}else if(pid == 0){
+	}
+	if(pid == 0){
 	  /* Child process:
 	   * When fork() returns 0, we are in
 	   * the child process.
 	   */
+		printf("\n\nChild running...\n\n");
 
-		int valid = execvp(commandsArr[0],args);
+		 valid = execvp(commandsArr[0],args);
+		 printf("\n\n");
 		if(valid < 0){executeShellBuiltInCommands(commandsArr[0],args);}
-	}else{
+//		sleep(2);
+//		kill(getppid(),SIGCHLD);
+		printf("\n\nChild exitting...\n\n");
+
+
+	}
+	if(!backgroundExecution){
 	  /* When fork() returns a positive number, we are in the parent process
 	   * (the fork return value is the PID of the newly created child process)
 	   */
-	    pid = wait(&status);
-	}
+		int status;
 
+		printf("\nParent running, PID=%d.\n\n",getpid());
+
+		do{
+			waitpid(pid,&status,WUNTRACED|WNOHANG);
+		}while(!WIFSIGNALED(status)&&!WIFEXITED(status));
+		printf("\nParent ended, PID=%d.\n\n",getpid());
+
+			// WIFEXITED(status) Normally  WIFSIGNALED signal
+			//if the child process terminated by signal or normally
+			//the parent should wait as it is not run in background process
+			//run in back-ground is the process which you need to wait until the current child if exists finishs
+			//and then you need to work with the parent to execute the background-commands
+		//background --> parent  any other commands --> child(s)
+		//child end with signal which is SIGCHLD
+
+
+	    //NOT SURE WHAT THE EXIT WILL BE LOOK LIKE BUT
+	    //IT WILL TAKE ONLY 1 OR 2 EXIT COMMNAD TO EXIT FROM ALL THE PROCESSES
+//	    if(valid <0){exitProcess(1);}
+	}
 
 };
 void executeInBackground(char* const args[], const char* command){
 
 
 };
-void writeInLogFille(){
+void writeInLogFille(char *text){
 
+	FILE *f = fopen("file.txt", "a");
+	if (f == NULL)
+	{
+	    printf("\nError opening file!\n");
+	    exit(1);
+	}
 
-};
-void childHandler(int sig){
+	fprintf(f,text);
 
+	fclose(f);
+	printf("\n\nfile closed \n\n");
 
 };
 
