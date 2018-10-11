@@ -136,10 +136,26 @@ int cdCommand(char *pth){
 void executeShellBuiltInCommands(char *command,char *args[]){
 	if(strcmp(command,"cd") == 0){
 		cdCommand(commandsArr[1]);
+	}else{
+		//example-> "times","dirs","history",
+		char *head = "bash -c ";
+	    char *result = malloc(strlen(head) + strlen(command) + 1); // +1 for the null-terminator
+	    strcpy(result, head);
+	    strcat(result, command);
+
+	    printf("command is:\n");
+	    printf("%s",result);
+	    printf("\n");
+		system(result);
+//		system(command);
+
+//		int test = system(command);
+//		printf("%d",test);
+//		if(test!=0){
+//			printf("try again");
+//			execl(command,args);
+//		}
 	}
-//	if()
-
-
 };
 
 

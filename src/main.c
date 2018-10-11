@@ -62,6 +62,7 @@ int main(int argc, char* argv[]){
 int main()
 {
 
+
 	while(1){
 	char line[1024]={};
 	char *commandLineArgs[1024]={};
@@ -74,7 +75,18 @@ int main()
     printf("\n");
 
 	}
-//	parseCommand(line);
+
+	//EXAMPLE FOR SUDO OPERATION IT WILL WORK WITH IDES LIKE CODEBLOCKS BUT WILL NOT WORK WITH ECLIPSE
+//	 char *argv[4];
+//	 argv[0] = "sudo";
+//	 argv[1] = "apt-get";
+//	 argv[2] = "install";
+//	 argv[3] = "git";
+//	 argv[4] = NULL;
+//	execvp("sudo",argv);
+
+
+	//	parseCommand(line);
 //
 
 
