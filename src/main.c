@@ -61,13 +61,19 @@ int main(int argc, char* argv[]){
 
 int main()
 {
-	char line[1024];
-	char *commandLineArgs[1024];
+
+	while(1){
+	char line[1024]={};
+	char *commandLineArgs[1024]={};
+	printf("SHELL->");
 	scanf ("%[^\n]%*c", line);
 	parseCommand(line);
+	parseCommandInsideAsingleArray(line,commandLineArgs);
 	execute(commandLineArgs);
+    printf("\n");
+
+	}
 //	parseCommand(line);
-//	parseCommandInsideAsingleArray(line,commandLineArgs);
 //
 
 

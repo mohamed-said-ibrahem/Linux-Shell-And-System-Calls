@@ -74,6 +74,7 @@ void parseCommandInsideAsingleArray(char *command,char **arr){
 void parseCommand(char *command){
 
 	char *token;
+	commandsCounter = 0;
 	command = removeWhiteSpaces(command);
 	backgroundExecution = checkBackgroundExecution(command);
 
@@ -106,23 +107,41 @@ int reutrnStatusCode(char* const args[]){
 
 return 1;
 };
+
 void printErrorMessages(int status[]){
 
 
 };
+
+void executeShellBuiltInCommands(char *command,char *args[]){
+
+
+};
+
+
 void execute(char **args){
 	if(strcmp(commandsArr[0],"exit") == 0){
 		exitProcess(0);
 	}
 	pid_t pid;
+	int status;
 	pid = fork();
 	if(pid < 0){
 	      printf("ERROR CAN'T FORK() \n");
 	      exitProcess(errno);
-	}else if(pid==0){
+	}else if(pid == 0){
+	  /* Child process:
+	   * When fork() returns 0, we are in
+	   * the child process.
+	   */
 
+		int valid = execvp(commandsArr[0],args);
+		if(valid < 0){executeShellBuiltInCommands(commandsArr[0],args);}
 	}else{
-
+	  /* When fork() returns a positive number, we are in the parent process
+	   * (the fork return value is the PID of the newly created child process)
+	   */
+	    pid = wait(&status);
 	}
 
 
