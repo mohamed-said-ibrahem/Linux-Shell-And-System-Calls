@@ -5,11 +5,8 @@
 
 void exitProcess(int status);
 void startShell();
-int reutrnStatusCode(char* const args[]);
-void printErrorMessages(int status[]);
 void execute( char **args);
 void executeShellBuiltInCommands(char *command,char *args[]);
-void executeInBackground(char* const args[], const char* command);
 void writeInLogFille(char *text);
 void parseCommand(char *command);
 char *removeWhiteSpaces(char *command);
